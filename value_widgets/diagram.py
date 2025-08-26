@@ -168,7 +168,7 @@ class Diagram(QWidget):
                 text = f"{round(self.__values[j][i])}"
                 bounding_rect = QFontMetrics(font).boundingRect(text)
 
-                qp.setPen(choose_contrast_color(QColor(self.__colors[j][i])))
+                qp.setPen(choose_contrast_color(QColor(self.__colors[i])))
                 if bounding_rect.width() > wrect - 5:
                     qp.save()
                     qp.translate(x, y + wrect)

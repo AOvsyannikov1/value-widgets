@@ -96,3 +96,6 @@ class Relay(ControllableWidget):
         if self.__value != value:
             self.__value = value
             self.__redraw_required = True
+
+    def set_dark(self, dark: bool):
+        self.__dark = dark

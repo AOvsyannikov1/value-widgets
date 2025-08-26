@@ -47,6 +47,9 @@ class ValueWidget(QWidget):
         self.__tmr.start(redraw_period)
         self.show()
 
+    def set_dark(self, dark: bool):
+        self.__dark = dark
+
     def set_maximum(self, val: float):
         self.__max_value = val
 

@@ -57,6 +57,9 @@ class PointerDevice(QWidget):
         self.__d = d
         self.__R = d / 2
 
+    def set_dark(self, dark: bool):
+        self.__dark = dark
+
     @Slot()
     def __redraw_process(self):
         if self.__redraw_required:
