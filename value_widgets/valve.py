@@ -47,6 +47,9 @@ class Valve(ControllableWidget):
             self.update()
             self.__redraw_required = False
 
+    def set_dark(self, dark: bool):
+        self.__dark = dark
+
     def setGeometry(self, x, y, w, h):
         self.__x = x
         self.__y = y
