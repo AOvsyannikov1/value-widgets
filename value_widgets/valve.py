@@ -20,8 +20,8 @@ class Valve(ControllableWidget):
 
         self.__offset_x = self.__w / 6
         self.__offset_y = self.__h / 5
-        self.__triangle_x = [0] * 5
-        self.__triangle_y = [0] * 5
+        self.__triangle_x = [0.0] * 5
+        self.__triangle_y = [0.0] * 5
 
         self.__triangle_x[0] = self.__offset_x
         self.__triangle_x[1] = self.__offset_x
