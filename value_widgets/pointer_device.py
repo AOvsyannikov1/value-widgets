@@ -1,8 +1,8 @@
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen
+from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QFontMetrics
 from PyQt6.QtCore import Qt, QRectF, QLineF, QTimer, pyqtSlot as Slot
 from PyQt6.QtWidgets import QWidget
 import numpy as np
-from math import sin, cos, radians
+from math import sin, cos, radians, pi, sqrt
 
 import time
 
@@ -104,7 +104,11 @@ class PointerDevice(QWidget):
         self.__qp.setBrush(QColor(0, 0, 0))
         pen = QPen(QColor(0, 0, 0), 1.5)
         self.__qp.setPen(pen)
-        self.__qp.setFont(QFont('bahnschrift light', self.__d // 20))
+
+        font = QFont('Bahnschrift, Arial', self.__d // 20)
+        self.__qp.setFont(font)
+
+        metrics = QFontMetrics(font)
 
         # основные деления
         X = np.arange(self.__min_val, self.__max_val + self.__major_step, self.__major_step)
@@ -134,7 +138,9 @@ class PointerDevice(QWidget):
                 if self.__dark:
                     pen = QPen(QColor(255, 255, 255), 2)
                     self.__qp.setPen(pen)
-                self.__qp.drawText(QRectF(Xtxt[0] - 20, Xtxt[1] - 10, 40, 20), Qt.AlignmentFlag.AlignHCenter, f"{disp}")
+                
+                self.__draw_angle_text(f"{disp}", metrics, self.__d / 2, angle - pi / 2 - pi / 4)
+                # self.__qp.drawText(QRectF(Xtxt[0] - 20, Xtxt[1] - 10, 40, 20), Qt.AlignmentFlag.AlignHCenter, f"{disp}")
             lines.append(QLineF(X1[0], X1[1], X2[0], X2[1]))
 
             if self.__draw_arc:
@@ -269,3 +275,14 @@ class PointerDevice(QWidget):
         self.__qp.setFont(QFont('bahnschrift', self.__d // 16))
         y0 = self.__offset + int(self.__R + self.__d // 2.2)
         self.__qp.drawText(self.__offset, y0, self.__d, self.__d // 10, Qt.AlignmentFlag.AlignCenter, self.__label)
+
+    def __draw_angle_text(self, text: str, metrics: QFontMetrics, max_radius: float, angle_radians: float):
+        text_w = metrics.horizontalAdvance(text)
+        r = sqrt(0.5 * text_w ** 2 + (0.5 * metrics.height()) ** 2)
+        r_center = max_radius + r
+        x_win_center = r_center * cos(angle_radians) + self.width() / 2
+        y_win_center = r_center * sin(-angle_radians) + self.height() / 2
+        rect = QRectF(x_win_center - text_w / 2, y_win_center - metrics.height() / 2, text_w, metrics.height())
+
+        self.__qp.setPen(QColor(0, 0, 0))
+        self.__qp.drawText(rect, Qt.AlignmentFlag.AlignCenter, text)
