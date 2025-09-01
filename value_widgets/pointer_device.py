@@ -140,7 +140,6 @@ class PointerDevice(QWidget):
                     self.__qp.setPen(pen)
                 
                 self.__draw_angle_text(f"{disp}", metrics, self.__d / 2, angle - pi / 2 - pi / 4)
-                # self.__qp.drawText(QRectF(Xtxt[0] - 20, Xtxt[1] - 10, 40, 20), Qt.AlignmentFlag.AlignHCenter, f"{disp}")
             lines.append(QLineF(X1[0], X1[1], X2[0], X2[1]))
 
             if self.__draw_arc:
@@ -239,7 +238,6 @@ class PointerDevice(QWidget):
         else:
             if (self.__max_val - self.__min_val) < 10:
                 tmp = f"{{:.{self.__n_digits}f}}".format(val)
-                # tmp = f"{round(val, self.n_digits)}"
             elif (self.__max_val - self.__min_val) < 100:
                 tmp = "{:.2f}".format(val)
             else:
@@ -284,5 +282,5 @@ class PointerDevice(QWidget):
         y_win_center = r_center * sin(-angle_radians) + self.height() / 2
         rect = QRectF(x_win_center - text_w / 2, y_win_center - metrics.height() / 2, text_w, metrics.height())
 
-        self.__qp.setPen(QColor(0, 0, 0))
+        self.__qp.setPen(QColor(0xFFFFFF) if self.__dark else QColor(0))
         self.__qp.drawText(rect, Qt.AlignmentFlag.AlignCenter, text)
