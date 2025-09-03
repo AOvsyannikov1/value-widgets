@@ -2,6 +2,7 @@ from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QPolygonF
 from PyQt6.QtCore import Qt, QPointF, QTimer, QLineF, pyqtSlot as Slot
 
 from .controllable_widget import ControllableWidget
+from .utils import is_app_dark
 
 
 class Valve(ControllableWidget):
@@ -43,6 +44,9 @@ class Valve(ControllableWidget):
 
     @Slot()
     def __redraw_process(self):
+        if self.__dark != is_app_dark():
+            self.set_dark(is_app_dark())
+            self.__redraw_required = True
         if self.__redraw_required:
             self.update()
             self.__redraw_required = False

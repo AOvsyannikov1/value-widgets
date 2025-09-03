@@ -2,6 +2,7 @@ from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QFontMetrics
 from PyQt6.QtCore import Qt, QRectF, QLineF, QTimer, pyqtSlot as Slot
 from PyQt6.QtWidgets import QWidget
 import numpy as np
+from .utils import is_app_dark, background_color
 
 
 class ValueWidget(QWidget):
@@ -70,6 +71,9 @@ class ValueWidget(QWidget):
 
     @Slot()
     def __redraw_process(self):
+        if self.__dark != is_app_dark():
+            self.set_dark(is_app_dark())
+            self.__redraw_required = True
         if self.__redraw_required:
             self.update()
             self.__redraw_required = False
@@ -194,12 +198,12 @@ class ValueWidget(QWidget):
     def __draw_values(self, value, fixed_value, x0):
         if self.__is_error_value(value):
             return
-        
+        self.__qp.setBrush(self.__color)
         if self.__vertical:
             yval = self.__real_to_window_y(value)
             y0 = self.__real_to_window_y(0)
             self.__qp.setPen(QColor(0, 0, 0, 0))
-            self.__qp.setBrush(self.__color)
+            
             self.__qp.drawRect(QRectF(x0, y0, self.__w, yval - y0))
 
             if self.__draw_ref_value and self.__min_value <= fixed_value <= self.__max_value:
@@ -214,11 +218,6 @@ class ValueWidget(QWidget):
             if x0_val != x0:
                 self.__qp.setPen(QColor(150, 150, 150))
                 self.__qp.drawLine(QLineF(x0_val, self.__offset_y + 5, x0_val, self.__h - 22 - 5))
-
-            if self.__dark:
-                self.__qp.setBrush(QColor(86, 114, 179, 250))
-            else:
-                self.__qp.setBrush(QColor(45, 154, 254, 200))
 
             self.__qp.setPen(QColor(0, 0, 0, 0))
             self.__qp.drawRect(QRectF(x0_val, self.__offset_y, sizeX_val, self.__h - 22))

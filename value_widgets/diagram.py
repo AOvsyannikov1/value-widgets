@@ -1,4 +1,4 @@
-from .utils import choose_contrast_color
+from .utils import choose_contrast_color, is_app_dark
 from .color_generator import ColorGenerator
 
 from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QFontMetrics
@@ -45,6 +45,9 @@ class Diagram(QWidget):
 
     @Slot()
     def __redraw_process(self):
+        if self.__dark != is_app_dark():
+            self.set_dark(is_app_dark())
+            self.__redraw_required = True
         if self.__redraw_required:
             self.update()
             self.__redraw_required = False

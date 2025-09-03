@@ -3,8 +3,7 @@ from PyQt6.QtCore import Qt, QRectF, QLineF, QTimer, pyqtSlot as Slot
 from PyQt6.QtWidgets import QWidget
 import numpy as np
 from math import sin, cos, radians, pi, sqrt
-
-import time
+from .utils import is_app_dark
 
 
 class PointerDevice(QWidget):
@@ -62,6 +61,9 @@ class PointerDevice(QWidget):
 
     @Slot()
     def __redraw_process(self):
+        if self.__dark != is_app_dark():
+            self.set_dark(is_app_dark())
+            self.__redraw_required = True
         if self.__redraw_required:
             self.update()
             self.__redraw_required = False

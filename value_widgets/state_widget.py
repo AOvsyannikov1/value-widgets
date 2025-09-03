@@ -3,7 +3,7 @@ from PyQt6.QtGui import QPen, QColor, QFont
 from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtWidgets import QLabel
 
-from .utils import choose_contrast_color
+from .utils import choose_contrast_color, is_app_dark
 
 
 class StateWidget(QLabel):

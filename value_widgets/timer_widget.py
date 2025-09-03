@@ -3,7 +3,7 @@ from PyQt6.QtCore import Qt, pyqtSlot as Slot, QTimer
 from PyQt6.QtWidgets import QPushButton, QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy, QLabel
 
 from .timer import Timer
-from .utils import get_image_path
+from .utils import get_image_path, is_app_dark
 
 
 class TimerWidget(QFrame):
@@ -83,6 +83,9 @@ class TimerWidget(QFrame):
 
     @Slot()
     def __redraw_process(self):
+        if self.__dark != is_app_dark():
+            self.set_dark(is_app_dark())
+            self.__redraw_required = True
         if self.__redraw_required:
             self.update()
             self.__redraw_required = not self.__paused
