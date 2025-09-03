@@ -1,6 +1,8 @@
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QPolygonF, QPainterPath, QFontMetrics, QStyleHints
-from PyQt6.QtCore import Qt, QPointF, QRectF, QLineF
+from PyQt6.QtGui import QFont
+from PyQt6.QtCore import QTimer, pyqtSlot as Slot
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QSizePolicy
+from .utils import is_app_dark
+
 
 class ErrorWidget(QWidget):
 
@@ -24,6 +26,10 @@ class ErrorWidget(QWidget):
         self.__layout.addWidget(self.__indicator)
         self.__layout.addWidget(self.__label)
 
+        self.__tmr = QTimer(self)
+        self.__tmr.timeout.connect(self.__check_theme)
+        self.__tmr.start(100)
+
         self.adjustSize()
 
         self.set_error(False)
@@ -31,6 +37,11 @@ class ErrorWidget(QWidget):
     def setGeometry(self, x, y):
         super().setGeometry(x, y, 100, 20)
         self.adjustSize()
+
+    @Slot()
+    def __check_theme(self):
+        if self.__dark != is_app_dark():
+            self.set_dark(is_app_dark())
 
     def set_error(self, error: bool):
         if self.__error != error:
