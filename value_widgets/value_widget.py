@@ -212,7 +212,7 @@ class ValueWidget(QWidget):
                 self.__qp.drawLine(QLineF(x0, yval, x0 + self.__w, yval))
         else:
             xk = self.__w
-            sizeX_val = ((value / (self.__max_value - self.__min_value)) * (xk - x0))
+            sizeX_val = ((value / (self.__max_value - self.__min_value)) * self.__w)
             x0_val = (abs(self.__min_value) / (self.__max_value - self.__min_value) * (xk - x0)) + x0
 
             if x0_val != x0:
