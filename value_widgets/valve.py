@@ -179,3 +179,7 @@ class Valve(ControllableWidget):
         if 0 <= state <= 3 and self.__state != state:
             self.__state = state
             self.__redraw_required = True
+
+    @property
+    def state(self):
+        return self.__state

@@ -286,3 +286,7 @@ class PointerDevice(QWidget):
 
         self.__qp.setPen(QColor(0xFFFFFF) if self.__dark else QColor(0))
         self.__qp.drawText(rect, Qt.AlignmentFlag.AlignCenter, text)
+
+    @property
+    def value(self):
+        return self.__value

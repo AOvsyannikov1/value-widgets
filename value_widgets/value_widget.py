@@ -275,3 +275,8 @@ class ValueWidget(QWidget):
 
     def paintEvent(self, a0):
         self.__draw_value()
+
+    @property
+    def value(self):
+        return self.__value
+    

@@ -103,3 +103,7 @@ class Relay(ControllableWidget):
 
     def set_dark(self, dark: bool):
         self.__dark = dark
+
+    @property
+    def value(self):
+        return self.__value

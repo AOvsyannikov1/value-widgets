@@ -66,3 +66,7 @@ class ErrorWidget(QWidget):
             else:
                 self.__label.setStyleSheet(f"color: {'black' if self.__error else 'rgb(128, 128, 128)'};")
         self.__dark = dark
+
+    @property
+    def error(self):
+        return self.__error
