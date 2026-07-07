@@ -1,9 +1,6 @@
-from .utils import choose_contrast_color, is_app_dark
+from .utils import choose_contrast_color, is_app_dark, sign
 from .color_generator import ColorGenerator
-
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QFontMetrics
-from PyQt6.QtCore import Qt, QPointF, QRectF, QLineF, pyqtSlot as Slot, QTimer
-from PyQt6.QtWidgets import QWidget
+from .imports import *
 
 
 class Diagram(QWidget):
@@ -136,7 +133,7 @@ class Diagram(QWidget):
             if i < len(self.__section_names):
                 qp.setFont(QFont("consolas", 12))
                 qp.setBrush(DEFAULT_COLOR)
-                qp.drawText(QRectF(self.__offset_x + i * section_width, self.__offset_y + self.__h + 5, section_width, 15),
+                qp.drawText(QRectF(self.__offset_x + i * section_width, self.__offset_y + self.__h + 5, section_width, 17),
                             Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop,
                             self.__section_names[i])
 
@@ -173,14 +170,20 @@ class Diagram(QWidget):
 
                 qp.setPen(choose_contrast_color(QColor(self.__colors[i])))
                 if bounding_rect.width() > wrect - 5:
-                    qp.save()
-                    qp.translate(x, y + wrect)
-                    qp.rotate(-90)
-                    qp.drawText(QRectF(-h + self.__offset_y, 0, h, wrect), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight, text)
-                    qp.restore()
-                else:   
+                    # число шире, чем столбик - поворачиваем набок
+                    if abs(h) > bounding_rect.width() + 5:
+                        qp.save()
+                        qp.translate(x, y)
+                        qp.rotate(-90)
+                        qp.drawText(QRectF(-sign(h) * h - 5 + ((bounding_rect.width() + 7) if h < 0 else 0), 0, abs(h), wrect), Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight, text)
+                        qp.restore()
+                else:
+                    # число помещается горизонтально
+                    if self.__values[j][i] < 0:
+                        y -= bounding_rect.height() + 5
                     rect = QRectF(x, y + 5, wrect, bounding_rect.height())
-                    qp.drawText(rect, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop, text)
+                    if abs(h) > bounding_rect.height() + 5:
+                        qp.drawText(rect, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop, text)
         qp.setClipRect(0, 0, self.width(), self.height())
 
         pen.setStyle(Qt.PenStyle.SolidLine)

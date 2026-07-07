@@ -7,6 +7,7 @@ from .value_widget import ValueWidget
 from .error_widget import ErrorWidget
 from .pointer_device import PointerDevice
 from .timer_widget import TimerWidget
+from .test_window import show_test_widgets
 
 
 def _get_hook_dirs():

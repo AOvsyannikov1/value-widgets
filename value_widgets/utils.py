@@ -1,8 +1,7 @@
 from statistics import mean
 import importlib.resources as pkg_resources
 from pathlib import Path
-from PyQt6.QtGui import QColor, QGuiApplication
-from PyQt6.QtCore import Qt
+from .imports import *
 
 
 def choose_contrast_color(color: QColor):
@@ -24,9 +23,16 @@ def get_image_path(filename: str) -> str:
     
 
 def is_app_dark() -> bool:
-     return QGuiApplication.styleHints().colorScheme() == Qt.ColorScheme.Dark
+    try:
+        return QGuiApplication.styleHints().colorScheme() == Qt.ColorScheme.Dark
+    except AttributeError:
+        return False
 
 
 def background_color(dark: bool) -> QColor:
     return QColor(24, 24, 24) if dark else QColor(0xFFFFFF)
+
+
+def sign(x):
+    return -1 if x < 0 else (1 if x > 0 else 0)
         

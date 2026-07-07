@@ -1,5 +1,4 @@
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QPolygonF
-from PyQt6.QtCore import Qt, QPointF, QTimer, QLineF, pyqtSlot as Slot
+from .imports import *
 
 from .controllable_widget import ControllableWidget
 from .utils import is_app_dark

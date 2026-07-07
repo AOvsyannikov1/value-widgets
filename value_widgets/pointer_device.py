@@ -1,6 +1,4 @@
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QFontMetrics
-from PyQt6.QtCore import Qt, QRectF, QLineF, QTimer, pyqtSlot as Slot
-from PyQt6.QtWidgets import QWidget
+from .imports import *
 import numpy as np
 from math import sin, cos, radians, pi, sqrt
 from .utils import is_app_dark
@@ -156,24 +154,6 @@ class PointerDevice(QWidget):
             pen = QPen(QColor(0, 0, 0), 2)
         self.__qp.drawLines(lines)
 
-    def __display_value(self, val):
-        pen = QPen(QColor(0, 0, 0), 1)
-        self.__qp.setPen(pen)
-        val = round(val, 3)
-        if val > self.__max_val or val < self.__min_val:
-            tmp = "Ошибка"
-        else:
-            if (self.__max_val - self.__min_val) < 10:
-                tmp = "{:.3f}".format(val)
-            elif (self.__max_val - self.__min_val) < 100:
-                tmp = "{:.2f}".format(val)
-            else:
-                tmp = "{:.1f}".format(val)
-            if val > 0:
-                tmp = ' ' + tmp
-        self.__qp.setFont(QFont('bahnschrift', self.__d // 12))
-        self.__qp.drawText(int(self.__offset + self.__R - 50), int(self.__offset + self.__R + self.__d // 3.5), 100, 20, Qt.AlignmentFlag.AlignCenter, tmp)
-
     def __draw_needle(self, val, val2=0.0):
         if self.__second_needle:
 
@@ -260,7 +240,7 @@ class PointerDevice(QWidget):
         if self.__dark:
             color = QColor(0xFFFFFF)
         else:
-            color = QColor(255 if val > self.__max_val else 0, 0, 0)
+            color = QColor(255 if val > self.__max_val or val < self.__min_val else 0, 0, 0)
         pen = QPen(color, 1)
         self.__qp.setPen(pen)
         self.__qp.setFont(QFont('cascadia code', self.__d // 16))

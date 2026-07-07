@@ -1,6 +1,4 @@
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QPolygonF, QPainterPath, QFontMetrics, QStyleHints
-from PyQt6.QtCore import Qt, QPointF, QRectF, QLineF, QTimer, pyqtSlot as Slot
-from PyQt6.QtWidgets import QWidget
+from .imports import *
 import numpy as np
 from .timer import Timer
 
@@ -10,8 +8,6 @@ class KKM(QWidget):
     def __init__(self, widget, x, y, scale, redraw_period=20):
         super().__init__()
         self.setParent(widget)
-        self.__x = x
-        self.__y = y
         self.__scale = scale
         self.__qp = QPainter()
 
@@ -53,21 +49,20 @@ class KKM(QWidget):
     def pos_to_str(self, pos: int):
         if pos < 1 or pos > 7:
             return "?"
-        match pos:
-            case 1:
-                return "I"
-            case 2:
-                return "II"
-            case 3:
-                return "III"
-            case 4:
-                return "IV"
-            case 5:
-                return "VA"
-            case 6:
-                return "V"
-            case 7:
-                return "VI"
+        if pos == 1:
+            return "I"
+        elif pos == 2:
+            return "II"
+        elif pos == 3:
+            return "III"
+        elif pos == 4:
+            return "IV"
+        elif pos == 5:
+            return "VA"
+        elif pos == 6:
+            return "V"
+        elif pos == 7:
+            return "VI"
 
     def __draw_handle(self, angle, visible):
         if not visible:

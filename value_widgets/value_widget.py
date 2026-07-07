@@ -1,8 +1,6 @@
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QFontMetrics
-from PyQt6.QtCore import Qt, QRectF, QLineF, QTimer, pyqtSlot as Slot
-from PyQt6.QtWidgets import QWidget
+from .imports import *
 import numpy as np
-from .utils import is_app_dark, background_color
+from .utils import is_app_dark
 
 
 class ValueWidget(QWidget):
@@ -211,7 +209,7 @@ class ValueWidget(QWidget):
                 self.__qp.setPen(QPen(QColor(6, 214, 160), 2))
                 self.__qp.drawLine(QLineF(x0, yval, x0 + self.__w, yval))
         else:
-            xk = self.__w
+            xk = self.__w + x0
             sizeX_val = ((value / (self.__max_value - self.__min_value)) * self.__w)
             x0_val = (abs(self.__min_value) / (self.__max_value - self.__min_value) * (xk - x0)) + x0
 

@@ -1,7 +1,4 @@
-from PyQt6.QtGui import QFont, QIcon
-from PyQt6.QtCore import Qt, pyqtSlot as Slot, QTimer
-from PyQt6.QtWidgets import QPushButton, QFrame, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy, QLabel
-
+from .imports import *
 from .timer import Timer
 from .utils import get_image_path, is_app_dark
 
@@ -51,7 +48,7 @@ class TimerWidget(QFrame):
         
         buf = self.__name
         if self.__begin_value is not None:
-            buf += f" c {self.__begin_value:.2f} по {self.__end_value:.2f}"
+            buf += f" c {self.__begin_value:.2f} до {self.__end_value:.2f}"
         if self.__units is not None:
             buf += f" {self.__units}"
         self.__name_label.setText(buf)
@@ -60,6 +57,7 @@ class TimerWidget(QFrame):
         self.__time_label.setText("0.00 с")
         self.__time_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.__time_label.setFont(QFont("Consolas, Courier New", 14))
+
         self.__layout.addWidget(self.__name_label)
         self.__layout.addWidget(self.__time_label)
         spacerItem = QSpacerItem(10, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
@@ -75,11 +73,23 @@ class TimerWidget(QFrame):
         self.set_dark(dark)
         self.__time_label.setStyleSheet(f"color: {'rgb(6, 214, 160)' if self.__dark else 'rgb(0, 100, 50)'}")
 
+        self.__round_lbl = QLabel(self)
+        self.__round_lbl.setGeometry(10, self.height() - 20, 10, 10)
+        self.__round_lbl.setStyleSheet("""QLabel {
+                                        background-color: rgb(255, 201, 14);
+                                        border-radius: 5px;
+                                       }""")
+        self.__round_lbl.setVisible(False)
+        self.__blink_tmr = Timer(500)
+
         self.__qtmr = QTimer(self)
         self.__qtmr.timeout.connect(self.__redraw_process)
         self.__qtmr.start(redraw_period)
         self.__redraw_required = True
         self.show()
+
+    def measuring_in_progress(self):
+        return self.__fsm != 0
 
     @Slot()
     def __redraw_process(self):
@@ -138,6 +148,17 @@ class TimerWidget(QFrame):
                 self.__time_label.setStyleSheet(f"color: {'rgb(229, 89, 52)' if self.__dark else 'rgb(230, 0, 0)'}")
                 self.__value_ok = False
         self.__time_label.setText(f"{self.__counter:05.2f} с")
+        
+    def __blink(self):
+        if self.__fsm == 0 and self.__round_lbl.isVisible():
+            self.__round_lbl.setVisible(False)
+        elif self.__fsm != 0:
+            if self.__blink_tmr.expired():
+                self.__blink_tmr.restart()
+                if self.__round_lbl.isVisible():
+                    self.__round_lbl.setVisible(False)
+                else:
+                    self.__round_lbl.setVisible(True)
 
     def set_controlled_value(self, val: float):
         self.__controlled_value = val
@@ -146,7 +167,7 @@ class TimerWidget(QFrame):
         if dark != self.__dark:
             self.setStyleSheet(f"""
                                 QFrame {{
-                                    background-color: {'rgb(45, 52, 65)' if dark else 'rgb(255, 255, 255)'}; 
+                                    background-color: {'rgb(45, 52, 65)' if dark else 'rgb(255, 255, 255)'};
                                     border-radius: 10px;
                                 }}
                                 """)
@@ -180,28 +201,28 @@ class TimerWidget(QFrame):
         self.__dark = dark
 
     def __redraw(self):
-        match self.__fsm:
-            case 0:
-                pass
-            case 1:
-                if self.__begin_value is None:
-                    self.__fsm = 2
-                    self.__tmr.restart()
-                elif ((self.__begin_value > self.__end_value and self.__controlled_value < self.__begin_value) or
-                        (self.__begin_value < self.__end_value and self.__controlled_value > self.__begin_value)):
-                    self.__fsm = 2
-                    self.__tmr.restart()
-            case 2:
-                if self.__begin_value is None:
-                    self.__counter = self.__tmr.get() / 1000 + self.__tmp_counter
+        if self.__fsm == 0:
+            pass
+        elif self.__fsm == 1:
+            if self.__begin_value is None:
+                self.__fsm = 2
+                self.__tmr.restart()
+            elif ((self.__begin_value > self.__end_value and self.__controlled_value < self.__begin_value) or
+                    (self.__begin_value < self.__end_value and self.__controlled_value > self.__begin_value)):
+                self.__fsm = 2
+                self.__tmr.restart()
+        elif self.__fsm == 2:
+            if self.__begin_value is None:
+                self.__counter = self.__tmr.get() / 1000 + self.__tmp_counter
+            else:
+                if ((self.__begin_value < self.__end_value and self.__controlled_value >= self.__end_value) or
+                        (self.__begin_value > self.__end_value and self.__controlled_value <= self.__end_value)):
+                    self.__fsm = 0
                 else:
-                    if ((self.__begin_value < self.__end_value and self.__controlled_value >= self.__end_value) or
-                            (self.__begin_value > self.__end_value and self.__controlled_value <= self.__end_value)):
-                        self.__fsm = 0
-                    else:
-                        self.__counter = self.__tmr.get() / 1000 + self.__tmp_counter
+                    self.__counter = self.__tmr.get() / 1000 + self.__tmp_counter
 
         self.__draw_rect()
+        self.__blink()
 
     def setGeometry(self, x, y, w, h):
         super().setGeometry(x, y, w, h)

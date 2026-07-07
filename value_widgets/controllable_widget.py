@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget
+from .imports import *
 
 
 class ControllableWidget(QWidget):

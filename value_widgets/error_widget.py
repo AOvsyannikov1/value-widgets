@@ -1,6 +1,4 @@
-from PyQt6.QtGui import QFont
-from PyQt6.QtCore import QTimer, pyqtSlot as Slot
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QSizePolicy
+from .imports import *
 from .utils import is_app_dark
 
 

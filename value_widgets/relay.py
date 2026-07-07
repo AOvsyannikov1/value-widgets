@@ -1,5 +1,4 @@
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen
-from PyQt6.QtCore import Qt, QLineF, QTimer, pyqtSlot as Slot
+from .imports import *
 from .controllable_widget import ControllableWidget
 from .utils import is_app_dark
 
@@ -13,7 +12,7 @@ class Relay(ControllableWidget):
         self.__value = False
         self.__dark = dark
         self.__redraw_required = True
-
+        
         self.__tmr = QTimer(self)
         self.__tmr.timeout.connect(self.__redraw_process)
         self.__tmr.start(redraw_period)

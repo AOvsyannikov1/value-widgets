@@ -7,7 +7,7 @@ def readme():
 
 setup(
     name="value-widgets",
-    version="0.8.1",
+    version="1.0.0",
     packages=find_packages(),
     long_description=readme(),
     package_data={
