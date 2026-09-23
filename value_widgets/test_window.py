@@ -13,7 +13,8 @@ class Win(QtWidgets.QWidget):
 
         self.mano = PointerDevice(self, 50, 50, 200, min_value=-100, max_value=100, label="Какой-то синус", units="Pomidors")
 
-        self.timer = TimerWidget(self, 20, 300, begin_value=0, end_value=100, normal_min=0, normal_max=4, name="Разгон", units="км/ч")
+        self.timer = TimerWidget(self, 630, 100, begin_value=0, end_value=100, normal_min=0, normal_max=4, name="Разгон быстрой тачки", units="км/ч")
+        self.timer.setGeometry(630, 100, 260, 120)
 
         self.val_wid = ValueWidget(self, 300, 20, scheme_number="А123", label="Название датчика", min_val=-15, max_val=10, units="кВ")
 
@@ -48,7 +49,9 @@ class Win(QtWidgets.QWidget):
 
     def loop(self):
         t = monotonic()
+        val = 50 * sin(0.6 * t + 0.2) + 50 * sin(1.01 * t + 0.1)
         self.mano.set_value(50 * sin(0.6 * t) + 50 * sin(1.01 * t))
+        self.mano.set_second_value(val)
         self.val_wid.set_value(11 * sin(t))
         self.val_wid_tmr.set_value(self.val)
 
@@ -78,9 +81,12 @@ class Win(QtWidgets.QWidget):
         self.error2.set_error(self.valve.get_control_state())
 
 
-def show_test_widgets():
+def show_test_widgets(dark=False):
     import sys
     app = QtWidgets.QApplication(sys.argv)
+    if dark:
+        app.setStyle("fusion")
+        QtGui.QGuiApplication.styleHints().setColorScheme(QtCore.Qt.ColorScheme.Dark)
     ui = Win()
     ui.show()
     sys.exit(app.exec())

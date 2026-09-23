@@ -42,9 +42,8 @@ class Relay(ControllableWidget):
                 color = QColor(229, 89, 52)
             else:
                 color = QColor(255, 0, 0)
-        self.__qp.setPen(color)
-        if not self.__dark:
-            self.__qp.setPen(QColor(0, 0, 0))
+
+        self.__qp.setPen(QColor(0, 0, 0, 0))
 
         if not self.underMouse():
             color.setAlpha(90)

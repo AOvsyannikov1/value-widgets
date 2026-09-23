@@ -116,7 +116,6 @@ class PointerDevice(QWidget):
 
         offset_minor = self.__d / 30
         offset_major = self.__d / 14
-        offset_text = -self.__d / 15
 
         for tick in X:
             for minor_tick_num in range(1, round(self.__major_step / self.__minor_step)):
@@ -129,7 +128,6 @@ class PointerDevice(QWidget):
                 lines.append(QLineF(X1[0], X1[1], X2[0], X2[1]))
 
             angle = self.__value_to_angle(tick)
-            Xtxt = self.__angle_to_coords_with_offset(angle, offset_text)
             X1 = self.__angle_to_coords_with_offset(angle, 0)
             X2 = self.__angle_to_coords_with_offset(angle, offset_major)
             rounded_value = round(tick, 2)
@@ -161,12 +159,13 @@ class PointerDevice(QWidget):
                 color = QColor(86, 114, 179)
             else:
                 color = QColor(0, 0, 255)
-            pen = QPen(color, self.__needle_width)
+            pen = QPen(color, self.__needle_width * 1.5)
             self.__qp.setPen(pen)
             tmp_val = min(self.__max_val, max(val2, self.__min_val))
             tmp = self.__value_to_angle(tmp_val)
             X1 = self.__angle_to_coords_with_offset(tmp, self.__d / 27)
-            self.__qp.drawLine(QLineF(self.__offset + self.__R, self.__offset + self.__R, X1[0], X1[1]))
+            X2 = self.__angle_to_coords_with_offset(tmp, -5)
+            self.__qp.drawLine(QLineF(X2[0], X2[1], X1[0], X1[1]))
 
         color = QColor(255, 0, 0) if not self.__dark else QColor(233, 96, 79)
         pen = QPen(color, self.__needle_width)

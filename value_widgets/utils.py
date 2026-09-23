@@ -35,4 +35,3 @@ def background_color(dark: bool) -> QColor:
 
 def sign(x):
     return -1 if x < 0 else (1 if x > 0 else 0)
-        

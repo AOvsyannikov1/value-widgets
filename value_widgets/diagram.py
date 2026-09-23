@@ -190,7 +190,10 @@ class Diagram(QWidget):
         pen.setColor(DEFAULT_COLOR)
         qp.setPen(pen)
 
-        qp.drawLine(QLineF(self.__offset_x, self.__offset_y + self.__h, self.__offset_x + self.__w, self.__offset_y + self.__h))
+        # горизонтальная ось
+        y0 = self.__real_to_window_y(0)
+        qp.drawLine(QLineF(self.__offset_x, y0, self.__offset_x + self.__w, y0))
+        # вертикальная ось
         qp.drawLine(QLineF(self.__offset_x, self.__offset_y + self.__h, self.__offset_x, self.__offset_y))
 
         y = self.__offset_y

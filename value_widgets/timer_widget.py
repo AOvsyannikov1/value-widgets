@@ -52,6 +52,7 @@ class TimerWidget(QFrame):
         if self.__units is not None:
             buf += f" {self.__units}"
         self.__name_label.setText(buf)
+        self.__name_label.setWordWrap(True)
 
         self.__time_label = QLabel()
         self.__time_label.setText("0.00 с")
@@ -226,3 +227,4 @@ class TimerWidget(QFrame):
 
     def setGeometry(self, x, y, w, h):
         super().setGeometry(x, y, w, h)
+        self.__round_lbl.setGeometry(10, self.height() - 20, 10, 10)

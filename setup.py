@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, find_packages
 
 
 def readme():
@@ -7,7 +7,7 @@ def readme():
 
 setup(
     name="value-widgets",
-    version="1.0.0",
+    version="1.1.0",
     packages=find_packages(),
     long_description=readme(),
     package_data={
